@@ -1,0 +1,57 @@
+{ parameter
+    (or (unit %nothing)
+        (pair %saveEvent
+           (string %name)
+           (string %videogame)
+           (timestamp %begin_at)
+           (timestamp %end_at)
+           (timestamp %modified_at)
+           (pair %opponents (string %team_one) (string %team_two))
+           (bool %is_finalized)
+           (option %is_draw bool)
+           (option %is_team_one_win bool))) ;
+  storage
+    (pair (string %name)
+          (string %videogame)
+          (timestamp %begin_at)
+          (timestamp %end_at)
+          (timestamp %modified_at)
+          (pair %opponents (string %team_one) (string %team_two))
+          (bool %is_finalized)
+          (option %is_draw bool)
+          (option %is_team_one_win bool)
+          (map %metadata string bytes)) ;
+  code { UNPAIR ;
+         IF_LEFT
+           { DROP }
+           { SWAP ;
+             DUP 2 ;
+             CAR ;
+             UPDATE 1 ;
+             DUP 2 ;
+             GET 3 ;
+             UPDATE 3 ;
+             DUP 2 ;
+             GET 5 ;
+             UPDATE 5 ;
+             DUP 2 ;
+             GET 7 ;
+             UPDATE 7 ;
+             DUP 2 ;
+             GET 9 ;
+             UPDATE 9 ;
+             DUP 2 ;
+             GET 11 ;
+             UPDATE 11 ;
+             DUP 2 ;
+             GET 13 ;
+             UPDATE 13 ;
+             DUP 2 ;
+             GET 15 ;
+             UPDATE 15 ;
+             SWAP ;
+             GET 16 ;
+             UPDATE 17 } ;
+         NIL operation ;
+         PAIR } }
+
