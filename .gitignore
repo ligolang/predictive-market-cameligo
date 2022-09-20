@@ -1,5 +1,3 @@
-.env
-node_modules
 package-lock.json
 
 *.pyc
@@ -9,3 +7,4 @@ src/compiled/*
 deploy/*.js
 deployments/*
 deploy/node_modules
+deploy/.env
