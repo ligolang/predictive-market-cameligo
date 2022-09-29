@@ -6,7 +6,7 @@
 #import "helpers/events.mligo" "Events"
 #import "../common/log.mligo" "Log"
 
-let () = Log.describe("[AddBet] test suite")
+let () = Log.describe("[Betting - AddBet] test suite")
 
 let test_bet_team_one_should_work =
     let (_, betting_contract, betting_taddress, elon, _, alice, _, _) = Bootstrap.bootstrap() in
