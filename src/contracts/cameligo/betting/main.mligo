@@ -177,8 +177,8 @@ let add_bet (p_requested_event_id : nat)(team_one_bet : bool)(s : Types.storage)
     | None -> failwith Errors.no_event_bets
   in
   let updated_bet_event : Types.event_bets = if (team_one_bet)
-    then ( let uEvent : Types.event_bets = add_bet_team_one requested_event_bets in (uEvent) )
-    else ( let uEvent : Types.event_bets = add_bet_team_two requested_event_bets in (uEvent) )
+    then add_bet_team_one requested_event_bets 
+    else add_bet_team_two requested_event_bets
   in
   let new_events_map : (nat, Types.event_bets) big_map = (Big_map.update p_requested_event_id (Some(updated_bet_event)) s.events_bets) in
   (([] : operation list), {s with events_bets = new_events_map;})
