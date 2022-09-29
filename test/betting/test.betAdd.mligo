@@ -4,9 +4,9 @@
 #import "helpers/helper.mligo" "Helper"
 #import "helpers/assert.mligo" "Assert"
 #import "helpers/events.mligo" "Events"
-#import "helpers/log.mligo" "Log"
+#import "../common/log.mligo" "Log"
 
-let () = Log.describe("[AddBet] test suite")
+let () = Log.describe("[Betting - AddBet] test suite")
 
 let test_bet_team_one_should_work =
     let (_, betting_contract, betting_taddress, elon, _, alice, _, _) = Bootstrap.bootstrap() in

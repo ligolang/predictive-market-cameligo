@@ -2,7 +2,7 @@ import { char2Bytes } from "@taquito/utils";
 import { InMemorySigner } from '@taquito/signer';
 import { TezosToolkit, MichelsonMap } from '@taquito/taquito';
 import * as dotenv from 'dotenv'
-import compiled from '../compiled/callback_betting.json';
+import compiled from '../src/compiled/callback_betting.json';
 import metadataJson from "./metadata/metadata_callback_betting.json";
 
 dotenv.config(({ path: __dirname + '/.env' }))
@@ -26,9 +26,7 @@ let store = {
     end_at: 1660741034 + 3600,
     modified_at: 1660741034,
     opponents: { team_one: '', team_two: '' },
-    is_finalized : false,
-    is_draw: false,
-    is_team_one_win: false,
+    game_status : Ongoing,
     start_bet_time: 1660741034 + 1200,
     closed_bet_time: 1660741034 + 2400,
     bets_team_one: (new MichelsonMap()),

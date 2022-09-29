@@ -2,7 +2,7 @@ import { char2Bytes } from "@taquito/utils";
 import { InMemorySigner } from '@taquito/signer';
 import { TezosToolkit, MichelsonMap } from '@taquito/taquito';
 import * as dotenv from 'dotenv'
-import compiled from '../compiled/callback_oracle.json';
+import compiled from '../src/compiled/callback_oracle.json';
 import metadataJson from "./metadata/metadata_callback_oracle.json";
 
 dotenv.config(({ path: __dirname + '/.env' }))
@@ -26,9 +26,7 @@ let store = {
     end_at: 1660741034 + 3600,
     modified_at: 1660741034,
     opponents: { team_one: '', team_two: '' },
-    is_finalized: false,
-    is_draw: false,
-    is_team_one_win: false,
+    game_status: Ongoing,
     metadata: (MichelsonMap.fromLiteral({
         '': char2Bytes('tezos-storage:contents'),
         contents: char2Bytes(JSON.stringify(metadataJson))

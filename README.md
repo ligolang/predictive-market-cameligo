@@ -6,8 +6,8 @@ The current implementation of the contract is as follows :
 
 ## Structure :
 - a `Betting` contract, the main contract
-- _(optional)_ a `callback` contract for the `Betting`
 - _(optional)_ a `mock Oracle` contract
+- _(optional)_ a `callback` contract for the `Betting`
 - _(optional)_ a `callback` contract for the `mock Oracle`
 
 ## Storage :
@@ -38,7 +38,10 @@ type bet_config_type = {
 - `min_bet_amount` : the minimum amount to Bet on an Event in a single transaction
 - `retainedProfit` : the quota to be retained from Betting profits (deduced as operating gains to the contract, shown as percentage, theorical max is 100)
 
-## Process :
+## Workflow :
+
+![Workflow](./images/Predictive%20Market%20-%20Flowchart.svg)
+
 1) Deploy the Betting contract with an initial storage
 2) The `storage.bet_config.is_betting_paused` and `storage.bet_config.is_event_creation_paused` must have as value `false`
 3) Add an Event using the `storage.manager` address
@@ -91,7 +94,7 @@ docker run --platform linux/amd64 --rm -v "$(PWD)":"$(PWD)" -w "$(PWD)" ligolang
 docker run --platform linux/amd64 --rm -v "$(PWD)":"$(PWD)" -w "$(PWD)" ligolang/ligo:0.49.0 run dry-run src/contracts/cameligo/betting/main.mligo 'SendValue(unit)' '37' -e main
 ```
 
-### - Originate the Betting contract (with tezos-client CLI)
+### - Originate the Betting contract (with tezos-client CLI) :
 - Compile the storage into Michelson expression :
 - Using `tz1bdTsc3QdAj1935KiMxou6frwdm5RDdssT` as example for `storage.manager`
 - Using `KT1KMjSSDxTAUZAb7rgGYx3JF4Yz1cwQpwUi` as example for `storage.oracle_address`
@@ -108,3 +111,25 @@ docker run --platform linux/amd64 --rm -v "$(PWD)":"$(PWD)" -w "$(PWD)" ligolang
 ```bash
 tezos-client originate contract betting transferring 1 from '$USER_ADDRESS' running 'src/compiled/betting.tz' --init '(Pair (Pair (Pair (Pair (Pair False False) 5000000 10) {}) {} 0)(Pair "tz1bdTsc3QdAj1935KiMxou6frwdm5RDdssT" {})"KT1KMjSSDxTAUZAb7rgGYx3JF4Yz1cwQpwUi")'
 ```
+
+## - Sample data using a 3rd party API :
+
+It is possible to use an external API to collect sample game data about eSports titles such as CS:GO, DOTA 2, and others.
+
+Some sample requests to get data from a third-party API can be found in the Backend folder. We are using here the API provider : [Pandascore](https://pandascore.co/).
+
+The API access tokens can be requested by creating an account on Pandascore [here](https://app.pandascore.co/signup)
+
+The API reference documentation can be viewed [here](https://developers.pandascore.co/reference)
+
+The scripts can be executed as follows :
+
+```bash
+node backend/matches_past.js
+node backend/matches_running.js
+node backend/matches_upcoming.js
+```
+
+The result of the queries will be a JSON file in the Backend folder, which will contain game info.
+
+It is possible to inject this data to the Oracle after formatting manually, or automatically using a signer/broadcaster.

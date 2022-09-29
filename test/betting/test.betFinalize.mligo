@@ -3,7 +3,7 @@
 #import "helpers/helper.mligo" "Helper"
 #import "helpers/assert.mligo" "Assert"
 #import "helpers/events.mligo" "Events"
-#import "helpers/log.mligo" "Log"
+#import "../common/log.mligo" "Log"
 
 let () = Log.describe("[Betting - FinalizeBet] test suite")
 
@@ -26,9 +26,9 @@ let test_win_basic_team1_should_work =
   //When
   let () = Helper.trsc_finalize_bet_success (betting_contract, elon, 0n) in
   //Then
-  let () = assert (expected_alice_balance = Test.get_balance(alice)) in
-  let () = assert (expected_bob_balance   = Test.get_balance(bob)) in
-  let () = assert (expected_mike_balance  = Test.get_balance(mike)) in
+  let () = Assert.balance alice expected_alice_balance in
+  let () = Assert.balance bob expected_bob_balance in
+  let () = Assert.balance mike expected_mike_balance in
   "OK"
 
 
@@ -51,9 +51,9 @@ let test_draw_should_work =
   //When
   let () = Helper.trsc_finalize_bet_success (betting_contract, elon, 0n) in
   //Then
-  let () = assert (expected_alice_balance = Test.get_balance(alice)) in
-  let () = assert (expected_bob_balance   = Test.get_balance(bob)) in
-  let () = assert (expected_mike_balance  = Test.get_balance(mike)) in
+  let () = Assert.balance alice expected_alice_balance in
+  let () = Assert.balance bob expected_bob_balance in
+  let () = Assert.balance mike expected_mike_balance in
   "OK"
 
 
