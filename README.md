@@ -112,7 +112,62 @@ docker run --platform linux/amd64 --rm -v "$(PWD)":"$(PWD)" -w "$(PWD)" ligolang
 tezos-client originate contract betting transferring 1 from '$USER_ADDRESS' running 'src/compiled/betting.tz' --init '(Pair (Pair (Pair (Pair (Pair False False) 5000000 10) {}) {} 0)(Pair "tz1bdTsc3QdAj1935KiMxou6frwdm5RDdssT" {})"KT1KMjSSDxTAUZAb7rgGYx3JF4Yz1cwQpwUi")'
 ```
 
-## - Sample data using a 3rd party API :
+# Oracle Contract
+
+## Storage :
+```ocaml
+type storage = {
+  isPaused : bool;
+  manager : address;
+  signer : address;
+  events : (nat, event_type) map;
+  events_index : nat;
+  metadata : (string, bytes) map;
+}
+```
+- `isPaused` : If the creation of events on the contract is paused
+- `manager` : Manager **account** of the Betting contract
+- `signer` : Signer **contract** allowed to add Events and update them (usually a backend script)
+- `events`, `events_index` : Events mapped to their info and the latest index
+
+```ocaml
+type event_type = 
+  [@layout:comb] {
+  name : string;
+  videogame : string;
+  begin_at : timestamp;
+  end_at : timestamp;
+  modified_at : timestamp;
+  opponents : { team_one : string; team_two : string};
+  game_status : game_status;
+}
+```
+
+## Available Entrypoints :
+
+The following entrypoints are available :
+- ChangeManager
+- ChangeSigner
+- SwitchPause
+- AddEvent
+- GetEvent
+- UpdateEvent
+
+For full details, please consult the Oracle contracts in `src/contracts/cameligo/oracle`
+
+## Initial Storage example :
+
+```ocaml
+let store : storage = {
+    isPaused: False;
+    manager: "tz1******************";
+    signer: "tz1******************";
+    events: (Map.empty : (nat, event_type) map);
+    events_index: 0n;
+}
+```
+
+# - Sample data using a 3rd party API :
 
 It is possible to use an external API to collect sample game data about eSports titles such as CS:GO, DOTA 2, and others.
 
