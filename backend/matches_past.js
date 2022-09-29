@@ -7,8 +7,8 @@ dotenv.config(({path:__dirname+'/.env'}))
 sdk.auth(process.env.APIKEY);
 
 sdk.get_matches_past({
-    'filter[finished]': 'true',
-    'filter[not_started]': 'false',
+    'filter[finished]': true,
+    'filter[not_started]': false,
     sort: '',
     page: '1',
     per_page: '1'

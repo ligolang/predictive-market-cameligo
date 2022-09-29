@@ -6,7 +6,11 @@ dotenv.config(({ path: __dirname + '/.env' }))
 
 sdk.auth(process.env.APIKEY);
 
-sdk.get_csgo_matches_upcoming({ sort: 'begin_at', page: '1', per_page: '1' })
+sdk.get_csgo_matches_upcoming({
+    sort: 'begin_at',
+    page: '1',
+    per_page: '1'
+})
     .then(res => {
         console.log(res);
         let data = JSON.stringify(res);
