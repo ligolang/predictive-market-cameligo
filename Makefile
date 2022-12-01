@@ -1,6 +1,6 @@
-LIGO=docker run --platform linux/amd64 --rm -v "$(PWD)":"$(PWD)" -w "$(PWD)" ligolang/ligo:0.52.0
-PROTOCOL_OPT=--protocol kathmandu
-JSON_OPT=--michelson-format json
+ligo_compiler?=docker run --platform linux/amd64 --rm -v "$(PWD)":"$(PWD)" -w "$(PWD)" ligolang/ligo:0.52.0
+PROTOCOL_OPT?=
+JSON_OPT?=--michelson-format json
 
 help:
 	@echo  'Usage:'
@@ -46,36 +46,44 @@ compile_callback_oracle: callback_oracle.tz callback_oracle.json
 compile_callback_betting: callback_betting.tz callback_betting.json
 
 oracle.tz: src/contracts/cameligo/oracle/main.mligo
+	@if [ ! -d src/compiled ]; then mkdir src/compiled ; fi
 	@echo "Compiling Oracle smart contract to Michelson..."
-	@$(LIGO) compile contract $^ -e main $(PROTOCOL_OPT) --output-file src/compiled/$@
+	@$(ligo_compiler) compile contract $^ -e main $(PROTOCOL_OPT) --output-file src/compiled/$@
 
 oracle.json: src/contracts/cameligo/oracle/main.mligo
+	@if [ ! -d src/compiled ]; then mkdir src/compiled ; fi
 	@echo "Compiling Oracle smart contract to Michelson in JSON format..."
-	@$(LIGO) compile contract $^ $(JSON_OPT) -e main $(PROTOCOL_OPT) --output-file src/compiled/$@
+	@$(ligo_compiler) compile contract $^ $(JSON_OPT) -e main $(PROTOCOL_OPT) --output-file src/compiled/$@
 
 betting.tz: src/contracts/cameligo/betting/main.mligo
+	@if [ ! -d src/compiled ]; then mkdir src/compiled ; fi
 	@echo "Compiling Betting smart contract to Michelson..."
-	@$(LIGO) compile contract $^ -e main $(PROTOCOL_OPT) --output-file src/compiled/$@
+	@$(ligo_compiler) compile contract $^ -e main $(PROTOCOL_OPT) --output-file src/compiled/$@
 
 betting.json: src/contracts/cameligo/betting/main.mligo
+	@if [ ! -d src/compiled ]; then mkdir src/compiled ; fi
 	@echo "Compiling Betting smart contract to Michelson in JSON format..."
-	@$(LIGO) compile contract $^ $(JSON_OPT) -e main $(PROTOCOL_OPT) --output-file src/compiled/$@
+	@$(ligo_compiler) compile contract $^ $(JSON_OPT) -e main $(PROTOCOL_OPT) --output-file src/compiled/$@
 
 callback_oracle.tz: src/contracts/cameligo/oracle/callback/main.mligo
+	@if [ ! -d src/compiled ]; then mkdir src/compiled ; fi
 	@echo "Compiling callback_Oracle smart contract to Michelson..."
-	@$(LIGO) compile contract $^ -e main $(PROTOCOL_OPT) --output-file src/compiled/$@
+	@$(ligo_compiler) compile contract $^ -e main $(PROTOCOL_OPT) --output-file src/compiled/$@
 
 callback_oracle.json: src/contracts/cameligo/oracle/callback/main.mligo
+	@if [ ! -d src/compiled ]; then mkdir src/compiled ; fi
 	@echo "Compiling callback_Oracle smart contract to Michelson in JSON format..."
-	@$(LIGO) compile contract $^ $(JSON_OPT) -e main $(PROTOCOL_OPT) --output-file src/compiled/$@
+	@$(ligo_compiler) compile contract $^ $(JSON_OPT) -e main $(PROTOCOL_OPT) --output-file src/compiled/$@
 
 callback_betting.tz: src/contracts/cameligo/betting/callback/main.mligo
+	@if [ ! -d src/compiled ]; then mkdir src/compiled ; fi
 	@echo "Compiling callback_Betting smart contract to Michelson..."
-	@$(LIGO) compile contract $^ -e main $(PROTOCOL_OPT) --output-file src/compiled/$@
+	@$(ligo_compiler) compile contract $^ -e main $(PROTOCOL_OPT) --output-file src/compiled/$@
 
 callback_betting.json: src/contracts/cameligo/betting/callback/main.mligo
+	@if [ ! -d src/compiled ]; then mkdir src/compiled ; fi
 	@echo "Compiling callback_Betting smart contract to Michelson in JSON format..."
-	@$(LIGO) compile contract $^ $(JSON_OPT) -e main $(PROTOCOL_OPT) --output-file src/compiled/$@
+	@$(ligo_compiler) compile contract $^ $(JSON_OPT) -e main $(PROTOCOL_OPT) --output-file src/compiled/$@
 
 # -------------------------
 # 		TEST SECTION
@@ -86,54 +94,54 @@ test: test_oracle test_betting
 test_oracle: test_oracle_manager test_oracle_signer test_oracle_pause test_oracle_events
 
 test_oracle_manager: test/oracle/test.manager.mligo
-	@$(LIGO) run test $^ $(PROTOCOL_OPT)
+	@$(ligo_compiler) run test $^ $(PROTOCOL_OPT)
 
 test_oracle_signer: test/oracle/test.signer.mligo
-	@$(LIGO) run test $^ $(PROTOCOL_OPT)
+	@$(ligo_compiler) run test $^ $(PROTOCOL_OPT)
 
 test_oracle_pause: test/oracle/test.pause.mligo
-	@$(LIGO) run test $^ $(PROTOCOL_OPT)
+	@$(ligo_compiler) run test $^ $(PROTOCOL_OPT)
 
 test_oracle_events: test_oracle_event_add test_oracle_event_update test_oracle_event_get
 
 test_oracle_event_add: test/oracle/test.eventAdd.mligo
-	@$(LIGO) run test $^ $(PROTOCOL_OPT)
+	@$(ligo_compiler) run test $^ $(PROTOCOL_OPT)
 
 test_oracle_event_update: test/oracle/test.eventUpdate.mligo
-	@$(LIGO) run test $^ $(PROTOCOL_OPT)
+	@$(ligo_compiler) run test $^ $(PROTOCOL_OPT)
 
 test_oracle_event_get: test/oracle/test.eventGet.mligo
-	@$(LIGO) run test $^ $(PROTOCOL_OPT)
+	@$(ligo_compiler) run test $^ $(PROTOCOL_OPT)
 
 test_betting: test_betting_manager test_betting_oracle test_betting_pause test_betting_events test_betting_bet
 
 test_betting_manager: test/betting/test.manager.mligo
-	@$(LIGO) run test $^ $(PROTOCOL_OPT)
+	@$(ligo_compiler) run test $^ $(PROTOCOL_OPT)
 
 test_betting_oracle: test/betting/test.oracle.mligo
-	@$(LIGO) run test $^ $(PROTOCOL_OPT)
+	@$(ligo_compiler) run test $^ $(PROTOCOL_OPT)
 
 test_betting_pause: test/betting/test.pause.mligo
-	@$(LIGO) run test $^ $(PROTOCOL_OPT)
+	@$(ligo_compiler) run test $^ $(PROTOCOL_OPT)
 
 test_betting_events: test_betting_event_add test_betting_event_update test_betting_event_get
 
 test_betting_event_add: test/betting/test.eventAdd.mligo
-	@$(LIGO) run test $^ $(PROTOCOL_OPT)
+	@$(ligo_compiler) run test $^ $(PROTOCOL_OPT)
 
 test_betting_event_update: test/betting/test.eventUpdate.mligo
-	@$(LIGO) run test $^ $(PROTOCOL_OPT)
+	@$(ligo_compiler) run test $^ $(PROTOCOL_OPT)
 
 test_betting_event_get: test/betting/test.eventGet.mligo
-	@$(LIGO) run test $^ $(PROTOCOL_OPT)
+	@$(ligo_compiler) run test $^ $(PROTOCOL_OPT)
 
 test_betting_bet: test_betting_bet_add test_betting_bet_finalize
 
 test_betting_bet_add: test/betting/test.betAdd.mligo
-	@$(LIGO) run test $^ $(PROTOCOL_OPT)
+	@$(ligo_compiler) run test $^ $(PROTOCOL_OPT)
 
 test_betting_bet_finalize: test/betting/test.betFinalize.mligo
-	@$(LIGO) run test $^ $(PROTOCOL_OPT)
+	@$(ligo_compiler) run test $^ $(PROTOCOL_OPT)
 
 # -------------------------
 # 		DEPLOY SECTION
