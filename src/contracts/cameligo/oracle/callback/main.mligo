@@ -23,7 +23,7 @@ type requested_event_param =
     game_status : game_status;
   }
 
-type parameter = SaveEvent of requested_event_param | Nothing of unit
+type parameter = SaveEvent of requested_event_param | Nothing
 
 let saveEvent(param, store : requested_event_param * storage) : operation list * storage =
   (([]: operation list), { store with 
