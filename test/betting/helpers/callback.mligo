@@ -28,7 +28,7 @@ let base_storage (bettingAddr : address) : Callback.storage = {
     bets_team_two       = (Map.empty : (address, tez) map);
     bets_team_two_index = 0n;
     bets_team_two_total = 0mutez;
-    metadata            = (Map.empty : (string, bytes) map);
+    meta                = (Map.empty : (string, bytes) map);
     bettingAddr         = bettingAddr;
 }
 

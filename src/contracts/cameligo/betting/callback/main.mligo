@@ -17,7 +17,7 @@ type storage =
   bets_team_two : (address, tez) map;
   bets_team_two_index : nat;
   bets_team_two_total : tez;
-  metadata : (string, bytes) map;
+  meta : (string, bytes) map;
   bettingAddr : address;
   }
 

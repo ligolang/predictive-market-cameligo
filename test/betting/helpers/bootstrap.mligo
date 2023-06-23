@@ -24,13 +24,13 @@ let bootstrap () =
   
   (* Boostrapping storage *)
   let init_storage : Types.storage = {
-    manager       = elon;
+    manager        = elon;
     oracle_address = jeff;
     bet_config     = init_bet_config;
-    events        = (Big_map.empty : (nat, Types.event_type) big_map);
-    events_bets   = (Big_map.empty : (nat, Types.event_bets) big_map);
-    events_index  = 0n;
-    metadata      = (Map.empty : (string, bytes) map);
+    events         = (Big_map.empty : (nat, Types.event_type) big_map);
+    events_bets    = (Big_map.empty : (nat, Types.event_bets) big_map);
+    events_index   = 0n;
+    meta           = (Map.empty : (string, bytes) map);
   } in
 
   (* Boostrapping BETTING contract *)

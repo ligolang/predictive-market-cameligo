@@ -44,7 +44,7 @@ let bootstrap_oracle () =
         signer = jeff;
         events = (Map.empty : (nat, Types.event_type) map);
         events_index = 0n;
-        metadata = (Map.empty : (string, bytes) map);
+        meta = (Map.empty : (string, bytes) map);
     } in
 
     (* Boostrapping Oracle contract *)
