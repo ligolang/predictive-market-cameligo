@@ -22,7 +22,7 @@ let base_storage : Callback.storage = {
     modified_at = plain_timestamp;
     opponents = { team_one = ""; team_two = ""};
     game_status = Ongoing;
-    metadata = (Map.empty : (string, bytes) map);
+    meta = (Map.empty : (string, bytes) map);
 }
 
 let originate_from_file (initial_storage : Callback.storage) : originated =

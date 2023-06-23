@@ -44,7 +44,7 @@ type storage = {
   events : (event_key, event_type) big_map;
   events_bets : (event_key, event_bets) big_map;
   events_index : event_key;
-  metadata : (string, bytes) map;
+  meta : (string, bytes) map;
 }
 
 type callback_asked_parameter =

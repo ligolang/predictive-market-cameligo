@@ -9,7 +9,7 @@ type storage =
   modified_at : timestamp;
   opponents : { team_one : string; team_two : string};
   game_status : game_status;
-  metadata : (string, bytes) map;
+  meta : (string, bytes) map;
   }
 
 type requested_event_param = 
