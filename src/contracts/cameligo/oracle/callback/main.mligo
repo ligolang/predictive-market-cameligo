@@ -1,6 +1,6 @@
 type game_status = Ongoing | Team1Win| Team2Win | Draw
 
-type storage = 
+type storage =
   [@layout:comb] {
   name : string;
   videogame : string;
@@ -12,7 +12,7 @@ type storage =
   meta : (string, bytes) map;
   }
 
-type requested_event_param = 
+type requested_event_param =
   [@layout:comb] {
     name : string;
     videogame : string;
@@ -25,8 +25,8 @@ type requested_event_param =
 
 type parameter = SaveEvent of requested_event_param | Nothing
 
-let saveEvent(param, store : requested_event_param * storage) : operation list * storage =
-  (([]: operation list), { store with 
+[@entry] let saveEvent(param : requested_event_param) (store : storage) : operation list * storage =
+  (([]: operation list), { store with
     name = param.name;
     videogame = param.videogame;
     begin_at = param.begin_at;
@@ -36,7 +36,4 @@ let saveEvent(param, store : requested_event_param * storage) : operation list *
     game_status = param.game_status;
   })
 
-let main ((p, s):(parameter * storage)) : operation list * storage =
-  match p with
-  | SaveEvent p -> saveEvent(p, s)
-  | Nothing _p -> (([]: operation list), s)
+[@entry] let nothing (_ : unit) (store : storage) : operation list * storage = (([]: operation list), store)
