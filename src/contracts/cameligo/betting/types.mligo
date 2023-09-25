@@ -11,7 +11,7 @@ type bet_config_type = {
 
 type game_status = Ongoing | Team1Win| Team2Win | Draw
 
-type event_type = 
+type event_type =
   [@layout:comb] {
   name : string;
   videogame : string;
@@ -67,7 +67,7 @@ type add_bet_parameter =
 
 type finalize_bet_parameter = nat
 
-type add_event_parameter = 
+type add_event_parameter =
 [@layout:comb] {
   name : string;
   videogame : string;
@@ -79,16 +79,3 @@ type add_event_parameter =
   start_bet_time : timestamp;
   closed_bet_time : timestamp;
 }
-
-
-type action =
-  | ChangeManager of address
-  | ChangeOracleAddress of address
-  | SwitchPauseBetting
-  | SwitchPauseEventCreation
-  | UpdateConfigType of bet_config_type
-  | AddEvent of add_event_parameter
-  | GetEvent of callback_asked_parameter
-  | UpdateEvent of update_event_parameter
-  | AddBet of add_bet_parameter
-  | FinalizeBet of finalize_bet_parameter

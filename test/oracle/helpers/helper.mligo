@@ -1,4 +1,5 @@
 #import "../../../src/contracts/cameligo/oracle/types.mligo" "Types"
+#import "../../../src/contracts/cameligo/oracle/main.mligo" "Oracle"
 #import "bootstrap.mligo" "Bootstrap"
 #import "assert.mligo" "Assert"
 
@@ -21,39 +22,39 @@ let three_event_map : (nat, Types.event_type) map = Map.literal [
 
 //  FUNCTIONS
 
-let trsc_change_manager(contr, from, new : Types.action contract * address * address) =
+let trsc_change_manager(contr, from, new : Oracle parameter_of contract * address * address) =
     let () = Test.set_source from in
     let result : test_exec_result = Test.transfer_to_contract contr (ChangeManager new) 0mutez in
     result
 
-let trsc_change_manager_success(contr, from, new : Types.action contract * address * address) =
+let trsc_change_manager_success(contr, from, new : Oracle parameter_of contract * address * address) =
   Assert.tx_success (trsc_change_manager(contr, from, new))
 
-let trsc_change_signer(contr, from, new : Types.action contract * address * address) =
+let trsc_change_signer(contr, from, new : Oracle parameter_of contract * address * address) =
     let () = Test.set_source from in
     let result : test_exec_result = Test.transfer_to_contract contr (ChangeSigner new) 0mutez in
     result
 
-let trsc_change_signer_success(contr, from, new : Types.action contract * address * address) =
+let trsc_change_signer_success(contr, from, new : Oracle parameter_of contract * address * address) =
   Assert.tx_success (trsc_change_signer(contr, from, new))
 
-let trsc_switch_pause(contr, from : Types.action contract * address) =
+let trsc_switch_pause(contr, from : Oracle parameter_of contract * address) =
     let () = Test.set_source from in
     let result : test_exec_result = Test.transfer_to_contract contr (SwitchPause) 0mutez in
     result
 
-let trsc_switch_pause_success(contr, from : Types.action contract * address) =
+let trsc_switch_pause_success(contr, from : Oracle parameter_of contract * address) =
   Assert.tx_success (trsc_switch_pause(contr, from))
 
-let trsc_add_event(contr, from, event : Types.action contract * address * Types.event_type) =
+let trsc_add_event(contr, from, event : Oracle parameter_of contract * address * Types.event_type) =
     let () = Test.set_source from in
     let result : test_exec_result = Test.transfer_to_contract contr (AddEvent event) 0mutez in
     result
 
-let trsc_add_event_success(contr, from, event : Types.action contract * address * Types.event_type) =
+let trsc_add_event_success(contr, from, event : Oracle parameter_of contract * address * Types.event_type) =
   Assert.tx_success (trsc_add_event(contr, from, event))
 
-let trsc_update_event(contr, from, event_num, event : Types.action contract * address * nat * Types.event_type) =
+let trsc_update_event(contr, from, event_num, event : Oracle parameter_of contract * address * nat * Types.event_type) =
     let () = Test.set_source from in
     let updateEventParam : Types.update_event_parameter =
     {
@@ -64,10 +65,10 @@ let trsc_update_event(contr, from, event_num, event : Types.action contract * ad
     let result : test_exec_result = Test.transfer_to_contract contr (UpdateEvent updateEventParam) 0mutez in
     result
 
-let trsc_update_event_success(contr, from, event_num, event : Types.action contract * address * nat * Types.event_type) =
+let trsc_update_event_success(contr, from, event_num, event : Oracle parameter_of contract * address * nat * Types.event_type) =
   Assert.tx_success (trsc_update_event(contr, from, event_num, event))
 
-let trsc_get_event(contr, from, cbk_addr, event_num : Types.action contract * address * address * nat) =
+let trsc_get_event(contr, from, cbk_addr, event_num : Oracle parameter_of contract * address * address * nat) =
     let () = Test.set_source from in
     let callbackParameter : Types.callback_asked_parameter =
     {
@@ -77,5 +78,5 @@ let trsc_get_event(contr, from, cbk_addr, event_num : Types.action contract * ad
     let result_cbk = Test.transfer_to_contract contr (GetEvent callbackParameter) 0mutez in
     result_cbk
 
-let trsc_get_event_success(contr, from, cbk_addr, event_num : Types.action contract * address * address * nat) =
+let trsc_get_event_success(contr, from, cbk_addr, event_num : Oracle parameter_of contract * address * address * nat) =
   Assert.tx_success (trsc_get_event(contr, from, cbk_addr, event_num))

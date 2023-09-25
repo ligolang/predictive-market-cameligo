@@ -67,7 +67,8 @@
   (([] : operation list), {s with events = new_events; events_bets = new_events_bets; events_index = (s.events_index + 1n)})
 
 
-[@entry] let getEvent ((requested_event_id, callbackAddr) : nat * address)(s : Types.storage) : (operation list * Types.storage) =
+[@entry] let getEvent (callback_asked_param : Types.callback_asked_parameter)(s : Types.storage) : (operation list * Types.storage) =
+  let { requested_event_id ; callback } = callback_asked_param in
   let cbk_event = match Big_map.find_opt requested_event_id s.events with
     | Some event -> event
     | None -> (failwith Errors.no_event_id)
@@ -94,7 +95,7 @@
     bets_team_two_total = cbk_eventbet.bets_team_two_total;
   } in
   let destination : Betting_Callback.requested_event_param contract =
-    match (Tezos.get_entrypoint_opt "%saveEvent" callbackAddr : Betting_Callback.requested_event_param contract option) with
+    match (Tezos.get_entrypoint_opt "%saveEvent" callback : Betting_Callback.requested_event_param contract option) with
     | None -> failwith("Unknown contract")
     | Some ctr -> ctr
   in
@@ -102,7 +103,8 @@
   ([op], s)
 
 
-[@entry] let updateEvent ((updated_event_id, updated_event) : nat * Types.event_type)(s : Types.storage) : (operation list * Types.storage) =
+[@entry] let updateEvent (update_event_param : Types.update_event_parameter)(s : Types.storage) : (operation list * Types.storage) =
+  let { updated_event_id; updated_event } = update_event_param in
   let _ = Assert.is_manager_or_oracle (Tezos.get_sender()) s.manager s.oracle_address in
   let _ = Assert.event_start_to_end_date updated_event.begin_at updated_event.end_at in
   let _ = Assert.event_bet_start_to_end_date updated_event.start_bet_time updated_event.closed_bet_time in
@@ -162,18 +164,19 @@ let add_bet_team_two (p_requested_event_id : Types.event_bets) : Types.event_bet
   (r_updated_event)
 
 
-[@entry] let addBet ((p_requested_event_id, team_one_bet) : nat * bool)(s : Types.storage) : (operation list * Types.storage) =
+[@entry] let addBet (add_bet_param : Types.add_bet_parameter) (s : Types.storage) : (operation list * Types.storage) =
+  let { requested_event_id; team_one_bet } = add_bet_param in
   let _ = Assert.not_manager_nor_oracle (Tezos.get_sender()) s.manager s.oracle_address in
   let _ = Assert.no_tez (Tezos.get_amount()) in
   let _ = Assert.tez_lower_than_min (Tezos.get_amount()) s.bet_config.min_bet_amount in
-  let requested_event : Types.event_type = match (Big_map.find_opt p_requested_event_id s.events) with
+  let requested_event : Types.event_type = match (Big_map.find_opt requested_event_id s.events) with
     | Some event -> event
     | None -> failwith Errors.no_event_id
   in
   let _ = Assert.betting_not_finalized (requested_event.game_status) in
   let _ = Assert.betting_before_period_start (requested_event.start_bet_time) in
   let _ = Assert.betting_after_period_end (requested_event.closed_bet_time) in
-  let requested_event_bets : Types.event_bets = match (Big_map.find_opt p_requested_event_id s.events_bets) with
+  let requested_event_bets : Types.event_bets = match (Big_map.find_opt requested_event_id s.events_bets) with
     | Some event -> event
     | None -> failwith Errors.no_event_bets
   in
@@ -181,7 +184,7 @@ let add_bet_team_two (p_requested_event_id : Types.event_bets) : Types.event_bet
     then add_bet_team_one requested_event_bets
     else add_bet_team_two requested_event_bets
   in
-  let new_events_map : (nat, Types.event_bets) big_map = (Big_map.update p_requested_event_id (Some(updated_bet_event)) s.events_bets) in
+  let new_events_map : (nat, Types.event_bets) big_map = (Big_map.update requested_event_id (Some(updated_bet_event)) s.events_bets) in
   (([] : operation list), {s with events_bets = new_events_map;})
 
 let make_transfer_op (addr : address ) ( value_won : tez ) (profit_quota : nat): operation =
@@ -267,11 +270,3 @@ let getBettingStatus (_ : unit) (s : Types.storage) : timestamp * bool =
 [@view]
 let getEventCreationStatus (_ : unit) (s : Types.storage) : timestamp * bool =
   (Tezos.get_now(), s.bet_config.is_event_creation_paused)
-
-[@view]
-let getEvent (p_requested_event_id : nat) (s : Types.storage) : timestamp * Types.event_type =
-  let requested_event : Types.event_type = match (Big_map.find_opt p_requested_event_id s.events) with
-    | Some event -> event
-    | None -> failwith Errors.no_event_id
-  in
-  (Tezos.get_now(), requested_event)

@@ -22,21 +22,23 @@
   let new_events : (nat, Types.event_type) map = (Map.add (s.events_index) new_event s.events) in
   (([] : operation list), {s with events = new_events; events_index = (s.events_index + 1n)})
 
-[@entry] let getEvent ((requested_event_id, callbackAddr) : nat * address)(s : Types.storage) : (operation list * Types.storage) =
+[@entry] let getEvent (callback_asked_param : Types.callback_asked_parameter) (s : Types.storage) : (operation list * Types.storage) =
+  let { requested_event_id; callback } = callback_asked_param in
   let cbk_event =
     match Map.find_opt requested_event_id s.events with
       Some event -> event
     | None -> (failwith Errors.no_event_id)
     in
   let destination : Callback.requested_event_param contract =
-  match (Tezos.get_entrypoint_opt "%saveEvent" callbackAddr : Callback.requested_event_param contract option) with
+  match (Tezos.get_entrypoint_opt "%saveEvent" callback : Callback.requested_event_param contract option) with
     None -> failwith("Unknown contract")
   | Some ctr -> ctr
   in
   let op : operation = Tezos.transaction cbk_event 0mutez destination in
   ([op], s)
 
-[@entry] let updateEvent ((updated_event_id, updated_event) : nat * Types.event_type)(s : Types.storage) : (operation list * Types.storage) =
+[@entry] let updateEvent (updated_event_param : Types.update_event_parameter)(s : Types.storage) : (operation list * Types.storage) =
+  let { updated_event_id ; updated_event} = updated_event_param in
   let _ = Assert.is_manager__or_signer (Tezos.get_sender()) s.manager s.signer in
   let _ : Types.event_type =
     match Map.find_opt updated_event_id s.events with
@@ -58,11 +60,3 @@ let getSigner (_ : unit) (s : Types.storage) : timestamp * address =
 [@view]
 let getStatus (_ : unit) (s : Types.storage) : timestamp * bool =
   (Tezos.get_now(), s.isPaused)
-
-[@view]
-let getEvent (pRequestedEventID : nat) (s : Types.storage) : timestamp * Types.event_type =
-  let requestedEvent : Types.event_type = match (Map.find_opt pRequestedEventID s.events) with
-      Some event -> event
-    | None -> failwith Errors.no_event_id
-  in
-  (Tezos.get_now(), requestedEvent)
