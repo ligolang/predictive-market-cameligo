@@ -1,8 +1,8 @@
 #import "../../../src/contracts/cameligo/betting/callback/main.mligo" "Callback"
 
 (* Some types for readability *)
-type taddr = (Callback.parameter, Callback.storage) typed_address
-type contr = Callback.parameter contract
+type taddr = (Callback parameter_of, Callback.storage) typed_address
+type contr = Callback parameter_of contract
 type originated = {
     addr: address;
     taddr: taddr;
@@ -36,7 +36,7 @@ let originate_from_file (initial_storage : Callback.storage) : originated =
     let betting_path           = "../../../src/contracts/cameligo/betting/callback/main.mligo" in
     let iTres                  = Test.run (fun (x : Callback.storage) -> x) initial_storage in
     let (callback_addr, _, _)  = Test.originate_from_file betting_path iTres 0mutez in
-    let callback_taddress      = (Test.cast_address callback_addr : (Callback.parameter, Callback.storage) typed_address) in
+    let callback_taddress      = (Test.cast_address callback_addr : (Callback parameter_of, Callback.storage) typed_address) in
     let callback_contract      = Test.to_contract callback_taddress in
     {
         contr=callback_contract;

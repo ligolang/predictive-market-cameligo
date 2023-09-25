@@ -42,7 +42,7 @@ let events_map (ctr_taddr : (Oracle parameter_of, Types.storage) typed_address) 
     let ctr_value : (nat, Types.event_type) map = (ctr_storage.events) in
     assert (ctr_value = expected)
 
-let event (taddr : (Callback.parameter, Callback.storage) typed_address) (expected_event : Types.event_type) : unit =
+let event (taddr : (Callback parameter_of, Callback.storage) typed_address) (expected_event : Types.event_type) : unit =
     let storage = Test.get_storage(taddr) in
     let () = assert(storage.name = expected_event.name) in
     let () = assert(storage.videogame = expected_event.videogame) in

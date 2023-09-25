@@ -39,9 +39,6 @@ type requested_event_param = [@layout:comb] {
   bets_team_two_total : tez;
 }
 
-type parameter = SaveEvent of requested_event_param | RequestEvent of nat
-
-
 [@entry] let saveEvent(param : requested_event_param) (store : storage) : operation list * storage =
   (([]: operation list), { store with
     name=param.name;

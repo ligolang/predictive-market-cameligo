@@ -58,7 +58,7 @@ let events_bet_map (ctr_taddr : (Betting parameter_of, Types.storage) typed_addr
     let ctr_value : (nat, Types.event_bets) big_map = (ctr_storage.events_bets) in
     assert (ctr_value = expected)
 
-let event (taddr : (Betting_Callback.parameter, Betting_Callback.storage) typed_address) (expected_event : Types.event_type) : unit =
+let event (taddr : (Betting_Callback parameter_of, Betting_Callback.storage) typed_address) (expected_event : Types.event_type) : unit =
     let storage = Test.get_storage(taddr) in
     let () = assert(storage.name=expected_event.name) in
     let () = assert(storage.videogame=expected_event.videogame) in
