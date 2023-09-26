@@ -1,6 +1,6 @@
 #import "../types.mligo" "BETTING_Types"
 
-type storage = 
+type storage =
   [@layout:comb] {
   name : string;
   videogame : string;
@@ -39,11 +39,8 @@ type requested_event_param = [@layout:comb] {
   bets_team_two_total : tez;
 }
 
-type parameter = SaveEvent of requested_event_param | RequestEvent of nat
-
-
-let saveEvent(param, store : requested_event_param * storage) : operation list * storage =
-  (([]: operation list), { store with 
+[@entry] let saveEvent(param : requested_event_param) (store : storage) : operation list * storage =
+  (([]: operation list), { store with
     name=param.name;
     videogame=param.videogame;
     begin_at=param.begin_at;
@@ -61,21 +58,15 @@ let saveEvent(param, store : requested_event_param * storage) : operation list *
     bets_team_two_total=param.bets_team_two_total;
   })
 
-let requestEvent(param, store : nat * storage) : operation list * storage =
+[@entry] let requestEvent(param : nat) (store : storage) : operation list * storage =
   let payload : BETTING_Types.callback_asked_parameter = {
     requested_event_id=param;
     callback=Tezos.get_self_address();
   } in
-  let destination : BETTING_Types.callback_asked_parameter contract = 
+  let destination : BETTING_Types.callback_asked_parameter contract =
     match (Tezos.get_entrypoint_opt "%getEvent" store.bettingAddr : BETTING_Types.callback_asked_parameter contract option) with
     | None -> failwith("Unknown entrypoint GetEvent")
     | Some ctr -> ctr
   in
   let op : operation = Tezos.transaction payload 0mutez destination in
   ([op], store)
-
-let main ((param, s):(parameter * storage)) : operation list * storage =
-  match param with
-  | SaveEvent p -> saveEvent(p, s)
-  | RequestEvent p -> requestEvent(p, s)
-

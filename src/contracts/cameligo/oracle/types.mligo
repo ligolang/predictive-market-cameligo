@@ -1,6 +1,6 @@
 type game_status = Ongoing | Team1Win| Team2Win | Draw
 
-type event_type = 
+type event_type =
   [@layout:comb] {
   name : string;
   videogame : string;
@@ -38,11 +38,3 @@ type callback_returned_value =
   requestedEvent : event_type;
   callback : address
 }
-
-type action =
-  | ChangeManager of address
-  | ChangeSigner of address
-  | SwitchPause
-  | AddEvent of event_type
-  | GetEvent of callback_asked_parameter
-  | UpdateEvent of update_event_parameter

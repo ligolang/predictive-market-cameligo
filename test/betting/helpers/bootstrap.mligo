@@ -21,7 +21,7 @@ let bootstrap () =
     min_bet_amount          = 1tez;
     retained_profit_quota   = 10n;
   } in
-  
+
   (* Boostrapping storage *)
   let init_storage : Types.storage = {
     manager        = elon;
@@ -36,13 +36,13 @@ let bootstrap () =
   (* Boostrapping BETTING contract *)
   let betting_path = "../../../src/contracts/cameligo/betting/main.mligo" in
   let iBis = Test.run (fun (x : Types.storage) -> x) init_storage in
-  let (betting_address, _, _) = Test.originate_from_file betting_path "main" (["getManager"; "getOracleAddress"; "getBettingStatus"; "getEventCreationStatus"; "getEvent"] : string list) iBis 0mutez in
-  let betting_taddress = (Test.cast_address betting_address : (Types.action,Types.storage) typed_address) in
+  let (betting_address, _, _) = Test.originate_from_file betting_path iBis 0mutez in
+  let betting_taddress = (Test.cast_address betting_address : (Betting parameter_of,Types.storage) typed_address) in
   let betting_contract = Test.to_contract betting_taddress in
-  
+
   (betting_address, betting_contract, betting_taddress, elon, jeff, alice, bob, james)
 
 let bootstrap_betting_callback (bettingAddr : address) =
-    let betting_callback = Helper_betting_callback.originate_from_file(Helper_betting_callback.base_storage(bettingAddr)) in    
+    let betting_callback = Helper_betting_callback.originate_from_file(Helper_betting_callback.base_storage(bettingAddr)) in
     betting_callback
-    
+

@@ -1,4 +1,5 @@
 #import "../../../src/contracts/cameligo/oracle/types.mligo" "Types"
+#import "../../../src/contracts/cameligo/oracle/main.mligo" "Oracle"
 #import "../../../src/contracts/cameligo/oracle/callback/main.mligo" "Callback"
 
 (* Assert contract result is successful *)
@@ -18,30 +19,30 @@ let string_failure (res : test_exec_result) (p_expected : string) : unit =
         | Success _ -> failwith "Transaction should fail"
 
 (* Assert Manager parameter with expected result *)
-let manager (ctr_taddr : (Types.action, Types.storage) typed_address) (expected : address) : unit =
+let manager (ctr_taddr : (Oracle parameter_of, Types.storage) typed_address) (expected : address) : unit =
     let ctr_storage : Types.storage = Test.get_storage(ctr_taddr) in
     let ctr_value : address = (ctr_storage.manager) in
     assert (ctr_value = expected)
 
 (* Assert Signer parameter with expected result *)
-let signer (ctr_taddr : (Types.action, Types.storage) typed_address) (expected : address) : unit =
+let signer (ctr_taddr : (Oracle parameter_of, Types.storage) typed_address) (expected : address) : unit =
     let ctr_storage : Types.storage = Test.get_storage(ctr_taddr) in
     let ctr_value : address = (ctr_storage.signer) in
     assert (ctr_value = expected)
 
 (* Assert isPaused parameter with expected result *)
-let ispaused (ctr_taddr : (Types.action, Types.storage) typed_address) (expected : bool) : unit =
+let ispaused (ctr_taddr : (Oracle parameter_of, Types.storage) typed_address) (expected : bool) : unit =
     let ctr_storage : Types.storage = Test.get_storage(ctr_taddr) in
     let ctr_value : bool = (ctr_storage.isPaused) in
     assert (ctr_value = expected)
 
 (* Assert isPaused parameter with expected result *)
-let events_map (ctr_taddr : (Types.action, Types.storage) typed_address) (expected : (nat, Types.event_type) map) : unit =
+let events_map (ctr_taddr : (Oracle parameter_of, Types.storage) typed_address) (expected : (nat, Types.event_type) map) : unit =
     let ctr_storage = Test.get_storage(ctr_taddr) in
     let ctr_value : (nat, Types.event_type) map = (ctr_storage.events) in
     assert (ctr_value = expected)
 
-let event (taddr : (Callback.parameter, Callback.storage) typed_address) (expected_event : Types.event_type) : unit =
+let event (taddr : (Callback parameter_of, Callback.storage) typed_address) (expected_event : Types.event_type) : unit =
     let storage = Test.get_storage(taddr) in
     let () = assert(storage.name = expected_event.name) in
     let () = assert(storage.videogame = expected_event.videogame) in

@@ -1,4 +1,5 @@
 #import "../../../src/contracts/cameligo/oracle/types.mligo" "Types"
+#import "../../../src/contracts/cameligo/oracle/main.mligo" "Oracle"
 #import "../../../src/contracts/cameligo/oracle/callback/main.mligo" "Callback"
 #import "callback.mligo" "Helper_Callback"
 
@@ -50,12 +51,12 @@ let bootstrap_oracle () =
     (* Boostrapping Oracle contract *)
     let oracle_path = "../../../src/contracts/cameligo/oracle/main.mligo" in
     let iBis = Test.run (fun (x : Types.storage) -> x) init_storage in
-    let (oracle_address, _, _) = Test.originate_from_file oracle_path "main" (["getManager"; "getSigner"; "getStatus"; "getEvent"] : string list) iBis 0mutez in
-    let oracle_taddress = (Test.cast_address oracle_address : (Types.action,Types.storage) typed_address) in
+    let (oracle_address, _, _) = Test.originate_from_file oracle_path iBis 0mutez in
+    let oracle_taddress = (Test.cast_address oracle_address : (Oracle parameter_of,Types.storage) typed_address) in
     let oracle_contract = Test.to_contract oracle_taddress in
-    
+
     (oracle_contract, oracle_taddress, elon, jeff, alice, bob, james)
 
 let bootstrap_oracle_callback () =
-    let oracle_callback = Helper_Callback.originate_from_file(Helper_Callback.base_storage) in    
+    let oracle_callback = Helper_Callback.originate_from_file(Helper_Callback.base_storage) in
     oracle_callback
