@@ -20,9 +20,9 @@ let test_win_basic_team1_should_work =
   let () = Helper.trsc_update_event_success (betting_contract, elon, 0n, Events.finalized_event_team1_win) in
   let storage = Test.get_storage(betting_taddress) in
   let quota_left : nat = abs(100n - storage.bet_config.retained_profit_quota) in
-  let expected_alice_balance = Test.get_balance(alice) + (800000000000mutez + 400000000000mutez) * quota_left / 100n in
-  let expected_bob_balance   = Test.get_balance(bob)   + (800000000000mutez + 400000000000mutez) * quota_left / 100n in
-  let expected_mike_balance  = Test.get_balance(mike) in
+  let expected_alice_balance = Test.get_balance_of_address(alice) + (800000000000mutez + 400000000000mutez) * quota_left / 100n in
+  let expected_bob_balance   = Test.get_balance_of_address(bob)   + (800000000000mutez + 400000000000mutez) * quota_left / 100n in
+  let expected_mike_balance  = Test.get_balance_of_address(mike) in
   //When
   let () = Helper.trsc_finalize_bet_success (betting_contract, elon, 0n) in
   //Then
@@ -45,9 +45,9 @@ let test_draw_should_work =
   let () = Helper.trsc_update_event_success (betting_contract, elon, 0n, Events.finalized_event_draw) in
   let storage = Test.get_storage(betting_taddress) in
   let quota_left : nat = abs(100n - storage.bet_config.retained_profit_quota) in
-  let expected_alice_balance = Test.get_balance(alice) + 800000000000mutez * quota_left / 100n in
-  let expected_bob_balance   = Test.get_balance(bob)   + 800000000000mutez * quota_left / 100n in
-  let expected_mike_balance  = Test.get_balance(mike)  + 800000000000mutez * quota_left / 100n in
+  let expected_alice_balance = Test.get_balance_of_address(alice) + 800000000000mutez * quota_left / 100n in
+  let expected_bob_balance   = Test.get_balance_of_address(bob)   + 800000000000mutez * quota_left / 100n in
+  let expected_mike_balance  = Test.get_balance_of_address(mike)  + 800000000000mutez * quota_left / 100n in
   //When
   let () = Helper.trsc_finalize_bet_success (betting_contract, elon, 0n) in
   //Then
@@ -70,16 +70,16 @@ let test_win_weighted_team1_should_work =
   let () = Helper.trsc_update_event_success (betting_contract, elon, 0n, Events.finalized_event_team1_win) in
   let storage = Test.get_storage(betting_taddress) in
   let quota_left : nat = abs(100n - storage.bet_config.retained_profit_quota) in
-  let expected_alice_balance = Test.get_balance(alice) + (800000000000mutez + 400000000000mutez) * quota_left / 100n in
-  let expected_bob_balance   = Test.get_balance(bob)   + (400000000000mutez + 200000000000mutez) * quota_left / 100n in
+  let expected_alice_balance = Test.get_balance_of_address(alice) + (800000000000mutez + 400000000000mutez) * quota_left / 100n in
+  let expected_bob_balance   = Test.get_balance_of_address(bob)   + (400000000000mutez + 200000000000mutez) * quota_left / 100n in
   //When
   let () = Helper.trsc_finalize_bet_success (betting_contract, elon, 0n) in
   //Then
-  let alice_bal_error : tez = match (expected_alice_balance - Test.get_balance(alice)) with
+  let alice_bal_error : tez = match (expected_alice_balance - Test.get_balance_of_address(alice)) with
     | Some b -> b 
     | None   -> failwith "Weighted Win Reward Test Fails"
   in
-  let bob_bal_error : tez = match (expected_bob_balance - Test.get_balance(bob)) with
+  let bob_bal_error : tez = match (expected_bob_balance - Test.get_balance_of_address(bob)) with
     | Some b -> b 
     | None   -> failwith "Weighted Win Reward Test Fails"
   in
@@ -101,16 +101,16 @@ let test_win_weighted_team2_should_work =
   let () = Helper.trsc_update_event_success (betting_contract, elon, 0n, Events.finalized_event_team2_win) in
   let storage = Test.get_storage(betting_taddress) in
   let quota_left : nat = abs(100n - storage.bet_config.retained_profit_quota) in
-  let expected_mike_balance = Test.get_balance(mike) + (60000tez + 20000tez) * quota_left / 100n in
-  let expected_bob_balance = Test.get_balance(bob) + (30000tez + 10000tez) * quota_left / 100n in
+  let expected_mike_balance = Test.get_balance_of_address(mike) + (60000tez + 20000tez) * quota_left / 100n in
+  let expected_bob_balance = Test.get_balance_of_address(bob) + (30000tez + 10000tez) * quota_left / 100n in
   //When
   let () = Helper.trsc_finalize_bet_success (betting_contract, elon, 0n) in
   //Then
-  let mike_bal_error : tez = match (expected_mike_balance - Test.get_balance(mike)) with
+  let mike_bal_error : tez = match (expected_mike_balance - Test.get_balance_of_address(mike)) with
     | Some b -> b 
     | None   -> failwith "Double Weighted Win Reward Test Team 2 Fails"
   in
-  let bob_bal_error : tez = match (expected_bob_balance - Test.get_balance(bob)) with
+  let bob_bal_error : tez = match (expected_bob_balance - Test.get_balance_of_address(bob)) with
     | Some b -> b 
     | None   -> failwith "Double Weighted Win Reward Test Team 2 Fails"
   in
@@ -197,11 +197,11 @@ let test_winning_without_counterparty_refund_should_work =
   let () = Helper.trsc_add_event_success (betting_contract, elon, Events.eventype_to_addeventparam(Events.primary_event)) in
   let () = Helper.trsc_add_bet_success (betting_contract, alice, 0n, (true  : bool), 1000tez) in
   let () = Helper.trsc_update_event_success (betting_contract, elon, 0n, Events.finalized_event_team1_win) in
-  let expected_alice_balance = Test.get_balance(alice) + 1000tez in
+  let expected_alice_balance = Test.get_balance_of_address(alice) + 1000tez in
   //When
   let () = Helper.trsc_finalize_bet_success (betting_contract, elon, 0n) in
   //Then
-  let () = assert (expected_alice_balance = Test.get_balance(alice)) in
+  let () = assert (expected_alice_balance = Test.get_balance_of_address(alice)) in
   "OK"
 
 
