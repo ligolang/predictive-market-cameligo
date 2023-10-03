@@ -20,7 +20,7 @@ let string_failure (res : test_exec_result) (expected : string) : unit =
 
 (* Assert Manager parameter with expected result *)
 let balance (p_address : address) (expected : tez) : unit =
-    let balance_value : tez = Test.get_balance(p_address) in
+    let balance_value : tez = Test.get_balance_of_address(p_address) in
     assert (balance_value = expected)
 
 (* Assert Manager parameter with expected result *)

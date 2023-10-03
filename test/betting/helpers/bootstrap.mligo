@@ -35,12 +35,11 @@ let bootstrap () =
 
   (* Boostrapping BETTING contract *)
   let betting_path = "../../../src/contracts/cameligo/betting/main.mligo" in
-  let iBis = Test.run (fun (x : Types.storage) -> x) init_storage in
-  let (betting_address, _, _) = Test.originate_from_file betting_path iBis 0mutez in
-  let betting_taddress = (Test.cast_address betting_address : (Betting parameter_of,Types.storage) typed_address) in
-  let betting_contract = Test.to_contract betting_taddress in
+  let orig = Test.originate_from_file betting_path init_storage 0mutez in
+  let betting_contract = Test.to_contract orig.addr in
+  let betting_address = Test.to_address orig.addr in
 
-  (betting_address, betting_contract, betting_taddress, elon, jeff, alice, bob, james)
+  (betting_address, betting_contract, orig.addr, elon, jeff, alice, bob, james)
 
 let bootstrap_betting_callback (bettingAddr : address) =
     let betting_callback = Helper_betting_callback.originate_from_file(Helper_betting_callback.base_storage(bettingAddr)) in
